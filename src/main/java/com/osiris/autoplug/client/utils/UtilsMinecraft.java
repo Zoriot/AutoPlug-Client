@@ -132,10 +132,14 @@ public class UtilsMinecraft {
                         found = true;
                         JsonObject jsonConfig = JsonParser.parseReader(new InputStreamReader(zipFile.getInputStream(entry))).getAsJsonObject();
 
-                        String name = jsonConfig.get("name").getAsString();
-                        //if (name==null || name.isEmpty()){ // In this case use the jars name as name
-                        //    name = jar.getName();
-                        //} // Don't do this, because the jars name contains its version and generally it wouldn't be nice
+                        JsonElement nameRaw = jsonConfig.get("name");
+                        String name;
+                        if (nameRaw == null) {
+                            name = jsonConfig.get("id").getAsString();
+                        } else {
+                            name = nameRaw.getAsString();
+                        }
+
                         String version = jsonConfig.get("version").getAsString();
                         JsonElement authorRaw = jsonConfig.get("author");
                         JsonElement authorsRaw = jsonConfig.get("authors");
