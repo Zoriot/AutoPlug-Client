@@ -1,26 +1,29 @@
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.w3c.dom.Element;
+import java.net.HttpURLConnection;
+import java.nio.file.*;
+import java.net.URI;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.function.BiConsumer;
+import org.xml.sax.SAXException;
+import java.util.function.Consumer;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.*;
+import org.w3c.dom.NodeList;
+import java.net.MalformedURLException;
 import java.util.stream.Collectors;
+import java.net.URL;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.io.*;
+import java.nio.charset.Charset;
+
+
+
 
 public class JPM {
     public static class ThisProject extends JPM.Project {
@@ -31,7 +34,7 @@ public class JPM {
 // Override default configurations
             this.groupId = "com.osiris.autoplug.client";
             this.artifactId = "AutoPlug-Client";
-            this.version = "10.0.4";
+            this.version = "10.0.5";
             this.mainClass = "com.osiris.autoplug.client.Main";
             this.jarName = "AutoPlug-Client-original.jar";
             this.fatJarName = "AutoPlug-Client.jar";
@@ -173,7 +176,8 @@ public class JPM {
         // (If you want to develop a plugin take a look at "JPM.AssemblyPlugin" class further below to get started)
     }
 
-    // 1JPM version 3.3.11 by Osiris-Team: https://github.com/Osiris-Team/1JPM
+    
+// 1JPM version 3.3.12 by Osiris-Team: https://github.com/Osiris-Team/1JPM
     // Do not edit anything below, since changes will be lost due to auto-updating.
     // You can also do this manually, by replacing everything below with its newer version and updating the imports.
     public static final List<Plugin> plugins = new ArrayList<>();
@@ -272,8 +276,10 @@ public class JPM {
         File f = new File(System.getProperty("user.dir")+"/target/log "+
                 command+".txt");
         try{
+            f.getParentFile().mkdirs();
+            f.createNewFile();
             Files.write(f.toPath(),
-                    log.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE,
+                    log.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.TRUNCATE_EXISTING);
             System.out.println("Log written to: "+ f);
         } catch (Exception e) {
@@ -568,7 +574,8 @@ public class JPM {
                 String jpmJavaContent = contentToString(url);
                 jpmJavaContent = jpmJavaContent.replace(".myproject", "."+childProjectDir.getName())
                         .replace("my-project", childProjectDir.getName());
-                Files.write(jpmFile.toPath(), jpmJavaContent.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                jpmFile.createNewFile();
+                Files.write(jpmFile.toPath(), jpmJavaContent.getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING);
                 System.out.println("Created JPM.java file for child project '"+childProjectDir.getName()+"'.");
 
                 execJavaJpmJava(childProjectDir);
