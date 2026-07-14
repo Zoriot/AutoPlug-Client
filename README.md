@@ -68,45 +68,9 @@ Building:
 
 Bounties:
 
-* Some issues are labeled like `bounty: 50€` (show the [list](https://github.com/Osiris-Team/AutoPlug-Client/issues?q=state%3Aopen%20label%3A%22bounty%3A%2050%E2%82%AC%22)). The first accepted pull request that fully fixes/closes the issue receives the bounty.
+* Some issues are labeled like `bounty: 50€` (show the [list](https://github.com/Osiris-Team/AutoPlug-Client/issues?q=state%3Aopen%20label%3A%22bounty%3A%2050%E2%82%AC%22)). The bounty is awarded to the creator of the first Pull Request (PR) that fully resolves the issue and is officially accepted and merged by the repository maintainers.
 
-<details>
-<summary>View Terms</summary>
-
-
-* Your PR must include at least one test proving the fix or feature works.
-* Payments are only made via PayPal.
-* Your PayPal email must be visible somewhere on your public GitHub profile before the PR is merged.
-* By submitting a PR for a bounty issue, you agree to these terms.
-* Low-quality, incomplete, or spam PRs may be closed without review.
-
-### AI Generated Pull Requests
-
-* AI-assisted code is allowed, but the submitter must fully review, understand, and test all generated code before opening the PR.
-* The PR author is fully responsible for all generated code and behavior.
-* PRs generated mostly by AI must clearly state this in the description.
-* AI-generated PRs require manual human review before merge.
-* Large AI-generated rewrites, formatting-only changes, hallucinated APIs, duplicate logic, or low-effort generated spam will be rejected.
-* Repeated submission of low-quality AI-generated PRs may result in bounty disqualification or repository bans.
-
-### Code Quality Requirements
-
-* Keep PRs focused and limited to a single issue or feature.
-* Follow the existing project structure, architecture, naming conventions, and coding style.
-* Reuse existing APIs, utility classes, helpers, and abstractions whenever possible.
-* Integrate changes into the existing code flow instead of bypassing, replacing, or duplicating major logic.
-* Avoid unnecessary rewrites, new abstractions, excessive refactors, or unrelated cleanup.
-* Do not introduce new dependencies or frameworks unless clearly justified.
-* PRs must include a clear description of:
-  * what changed
-  * why it changed
-  * how it was tested
-* PRs with failing builds, missing tests, broken functionality, or unreviewed generated code will be rejected.
-* If a PR requires excessive maintainer cleanup, restructuring, or debugging, it may be closed.
-* Repeated low-quality submissions may result in bounty disqualification or repository bans.
-</details>
-
-
+[View Terms & Conditions for Bounties.](./BOUNTY_TERMS.md)
 
 
 ## Libraries
