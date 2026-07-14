@@ -51,11 +51,6 @@ public class TaskSelfUpdater extends BThread {
             skip();
             return;
         }
-        if (new UtilsEnvironment().isPterodactylEnvironment()) {
-            setStatus("Self-updater disabled on Pterodactyl-managed servers.");
-            skip();
-            return;
-        }
         if (Server.isRunning()) throw new Exception("Cannot perform self update while server is running!");
 
         if (updaterConfig.self_updater_build.asString().equals("stable"))
@@ -164,6 +159,18 @@ public class TaskSelfUpdater extends BThread {
                     setStatus("AutoPlug update downloaded. Checking hash...");
                     if (!download.compareWithSHA256(sha256)) {
                         finish("Downloaded AutoPlug update is broken. Nothing changed!", false);
+                        return;
+                    }
+                    boolean isPterodactyl = new UtilsEnvironment().isPterodactylEnvironment();
+                    if (isPterodactyl) {
+                        File currentJarFile = currentInstallationPath != null
+                                ? FileManager.convertRelativeToAbsolutePath(currentInstallationPath)
+                                : new UtilsJar().getThisJar();
+                        setStatus("Installing AutoPlug update in place (" + currentVersion + " -> " + version + ")...");
+                        Files.copy(cache_dest.toPath(), currentJarFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        setStatus("AutoPlug update was installed successfully (" + currentVersion + " -> " + version + ")!");
+                        finish(true);
+                        System.exit(0);
                         return;
                     }
                     setStatus("Installing AutoPlug update (" + currentVersion + " -> " + version + ")...");
