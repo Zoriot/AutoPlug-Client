@@ -120,6 +120,7 @@ public class UpdaterConfig extends MyYaml {
                 "AutoPlug is able to update itself automatically.",
                 "Its strongly recommended to have this feature enabled,",
                 "to benefit from new features, bug fixes and security enhancements.",
+                "Pterodactyl-managed servers disable this at runtime to avoid restart loops.",
                 "Linux users, using screen read this: https://github.com/Osiris-Team/AutoPlug-Client/issues/75");
         self_updater_profile = put(name, "self-updater", "profile").setDefValues("AUTOMATIC");
         self_updater_build = put(name, "self-updater", "build").setDefValues("stable").setComments(

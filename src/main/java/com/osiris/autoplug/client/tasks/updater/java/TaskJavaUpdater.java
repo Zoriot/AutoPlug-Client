@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 import com.osiris.autoplug.client.Server;
 import com.osiris.autoplug.client.configs.UpdaterConfig;
 import com.osiris.autoplug.client.utils.GD;
+import com.osiris.autoplug.client.utils.UtilsEnvironment;
 import com.osiris.betterthread.BThread;
 import com.osiris.betterthread.BThreadManager;
 import com.osiris.jlib.logger.AL;
@@ -42,6 +43,11 @@ public class TaskJavaUpdater extends BThread {
         super.runAtStart();
         updaterConfig = new UpdaterConfig();
         if (!updaterConfig.java_updater.asBoolean()) {
+            skip();
+            return;
+        }
+        if (new UtilsEnvironment().isPterodactylEnvironment()) {
+            setStatus("Java updater disabled on Pterodactyl-managed servers.");
             skip();
             return;
         }

@@ -15,6 +15,7 @@ import com.osiris.autoplug.client.configs.UpdaterConfig;
 import com.osiris.autoplug.client.managers.FileManager;
 import com.osiris.autoplug.client.tasks.updater.TaskDownload;
 import com.osiris.autoplug.client.utils.GD;
+import com.osiris.autoplug.client.utils.UtilsEnvironment;
 import com.osiris.autoplug.client.utils.UtilsJar;
 import com.osiris.betterthread.BThread;
 import com.osiris.betterthread.BThreadManager;
@@ -47,6 +48,11 @@ public class TaskSelfUpdater extends BThread {
         updaterConfig = new UpdaterConfig();
 
         if (!updaterConfig.self_updater.asBoolean()) {
+            skip();
+            return;
+        }
+        if (new UtilsEnvironment().isPterodactylEnvironment()) {
+            setStatus("Self-updater disabled on Pterodactyl-managed servers.");
             skip();
             return;
         }
@@ -180,5 +186,3 @@ public class TaskSelfUpdater extends BThread {
     }
 
 }
-
-
