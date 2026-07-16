@@ -162,7 +162,7 @@ public class TaskSelfUpdater extends BThread {
                         return;
                     }
                     boolean isPterodactyl = new UtilsEnvironment().isPterodactylEnvironment();
-                    if (isPterodactyl) {
+                    if (isPterodactyl && updaterConfig.self_updater_safe_mode.asBoolean()) {
                         File currentJarFile = currentInstallationPath != null
                                 ? FileManager.convertRelativeToAbsolutePath(currentInstallationPath)
                                 : new UtilsJar().getThisJar();
