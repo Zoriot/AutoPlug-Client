@@ -46,17 +46,12 @@ public class TaskJavaUpdater extends BThread {
             skip();
             return;
         }
-        if (new UtilsEnvironment().isPterodactylEnvironment()) {
+        if (new UtilsEnvironment().isPterodactylEnvironment() && !updaterConfig.java_updater_force_enable.asBoolean()) {
             setStatus("Java updater disabled on Pterodactyl-managed servers.");
             skip();
             return;
         }
         if (Server.isRunning()) throw new Exception("Cannot perform update while server is running!");
-
-        if (!updaterConfig.java_updater.asBoolean()) {
-            skip();
-            return;
-        }
 
         setStatus("Searching for updates...");
 
