@@ -22,6 +22,8 @@ import com.osiris.autoplug.client.tasks.updater.search.spigot.SpigotSearchByAuth
 import com.osiris.autoplug.client.tasks.updater.search.spigot.SpigotSearchById;
 import com.osiris.autoplug.client.tasks.updater.search.spigot.SpigotSearchByName;
 
+import java.util.List;
+
 public class ResourceFinder {
 
     /**
@@ -77,8 +79,8 @@ public class ResourceFinder {
         sr.plugin = plugin;
         return sr;
     }
-    public SearchResult findPluginByModrinthId(MinecraftPlugin plugin, String mcVersion) {
-        SearchResult sr = new ModrinthAPI().searchUpdatePlugin(plugin, mcVersion);
+    public SearchResult findPluginByModrinthId(List<String> loaders, MinecraftPlugin plugin, String mcVersion) {
+        SearchResult sr = new ModrinthAPI().searchUpdatePlugin(loaders, plugin, mcVersion);
         sr.plugin = plugin;
         return sr;
     }

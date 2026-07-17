@@ -16,6 +16,7 @@ import com.osiris.autoplug.client.tasks.updater.search.SearchResult;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -36,7 +37,7 @@ class TestPluginUpdaters {
         UtilsTest.init();
         MinecraftPlugin pl = new MinecraftPlugin("./plugins/", "BMMarker", "0.0.0", "Miraculixx", 0, 0, null);
         pl.modrinthId = "a8UoyV2h";
-        SearchResult sr = new ModrinthAPI().searchUpdatePlugin(pl, "1.21.1");
+        SearchResult sr = new ModrinthAPI().searchUpdatePlugin(List.of("paper"), pl, "1.21.1");
         assertSame(SearchResult.Type.UPDATE_AVAILABLE, sr.type);
     }
 }

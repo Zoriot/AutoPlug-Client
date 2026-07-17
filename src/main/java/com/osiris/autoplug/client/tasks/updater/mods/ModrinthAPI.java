@@ -17,6 +17,7 @@ import com.osiris.jlib.logger.AL;
 
 import java.io.File;
 import java.time.Instant;
+import java.util.List;
 
 
 public class ModrinthAPI {
@@ -38,16 +39,15 @@ public class ModrinthAPI {
      */
     public SearchResult searchUpdateMod(InstalledModLoader modLoader, MinecraftMod mod, String mcVersion) {
         if (mod.modrinthId == null && !isInt(mod.curseforgeId)) mod.modrinthId = mod.curseforgeId; // Slug
-        SearchResult res = searchUpdate((modLoader.isFabric || modLoader.isQuilt ? "fabric" : "forge"),mod.modrinthId,mcVersion, mod.installationPath, mod.forceLatest);
+        SearchResult res = searchUpdate((modLoader.isFabric || modLoader.isQuilt ? List.of("fabric") : List.of("forge")),mod.modrinthId,mcVersion, mod.installationPath, mod.forceLatest);
         res.mod = mod;
         return res;
     }
-    public SearchResult searchUpdatePlugin(MinecraftPlugin plugin, String mcVersion) { //TODO: probably don't hardcode spigot and papermc
-        return searchUpdate("spigot\",\"paper", plugin.getModrinthId(), mcVersion, plugin.getInstallationPath(), false);
+    public SearchResult searchUpdatePlugin(List<String> loaders, MinecraftPlugin plugin, String mcVersion) {
+        return searchUpdate(loaders, plugin.getModrinthId(), mcVersion, plugin.getInstallationPath(), false);
     }
-    private SearchResult searchUpdate(String loader, String id, String mcVersion, String installPath, boolean forceLatest) {
-
-        String url = baseUrl + "/project/" + id + "/version?loaders=[\"" + loader + "\"]&game_versions=[\"" + mcVersion + "\"]";
+    private SearchResult searchUpdate(List<String> loaders, String id, String mcVersion, String installPath, boolean forceLatest) {
+        String url = baseUrl + "/project/" + id + "/version?loaders=[\"" + String.join( "\",\"", loaders) + "\"]&game_versions=[\"" + mcVersion + "\"]";
         url = new UtilsURL().clean(url);
         Exception exception = null;
         String latest = null;
@@ -67,7 +67,7 @@ public class ModrinthAPI {
                 if (!isInt(id)) { // Try another url, with slug replaced _ with -
                     url = baseUrl + "/project/" + id.replace("_", "-")
                             + "/version?loaders=[\"" +
-                            loader + "\"]" + (forceLatest ? "" : "&game_versions=[\"" + mcVersion + "\"]");
+                            String.join( "\",\"", loaders) + "\"]" + (forceLatest ? "" : "&game_versions=[\"" + mcVersion + "\"]");
                     AL.debug(this.getClass(), url);
                     release = Json.getAsJsonArray(url)
                             .get(0).getAsJsonObject();
