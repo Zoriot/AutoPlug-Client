@@ -22,6 +22,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Random;
 
 public class TaskDownload extends BThread {
@@ -76,18 +77,8 @@ public class TaskDownload extends BThread {
             body = response.body();
             if (body == null)
                 throw new Exception("Download of '" + dest.getName() + "' failed because of null response body!");
-            else if (!ignoreContentType && body.contentType() == null)
-                throw new Exception("Download of '" + dest.getName() + "' failed due to null content type!");
-            else if (!ignoreContentType && !body.contentType().type().equals("application"))
-                throw new Exception("Download of '" + dest.getName() + "' failed because of invalid content type: " + body.contentType().type());
-            else if (!ignoreContentType && !body.contentType().subtype().equals("java-archive")
-                    && !body.contentType().subtype().equals("jar")
-                    && !body.contentType().subtype().equals("octet-stream")) {
-                if (allowedSubContentTypes == null)
-                    throw new Exception("Download of '" + dest.getName() + "' failed because of invalid sub-content type: " + body.contentType().subtype());
-                if (!Arrays.asList(allowedSubContentTypes).contains(body.contentType().subtype()))
-                    throw new Exception("Download of '" + dest.getName() + "' failed because of invalid sub-content type: " + body.contentType().subtype());
-            }
+            if (!isAllowedContentType(fileName, body.contentType(), ignoreContentType, allowedSubContentTypes))
+                throw new Exception("Download of '" + dest.getName() + "' failed because of invalid content type: " + body.contentType());
 
             long completeFileSize = body.contentLength();
             setMax(completeFileSize);
@@ -149,6 +140,22 @@ public class TaskDownload extends BThread {
         AL.debug(this.getClass(), "Comparing hashes (SHA-256). Is equal? " +
                 result + " Excepted: \"" + expectedHash + "\" Actual: \"" + myHash + "\"");
         return result;
+    }
+
+    static boolean isAllowedContentType(String fileName, okhttp3.MediaType contentType, boolean ignoreContentType, String... allowedSubContentTypes) {
+        if (ignoreContentType) return true;
+        if (contentType == null) return false;
+        String type = contentType.type();
+        String subtype = contentType.subtype();
+        if ("application".equals(type)) {
+            if ("java-archive".equals(subtype) || "jar".equals(subtype) || "octet-stream".equals(subtype)) return true;
+            if (allowedSubContentTypes == null) return false;
+            return Arrays.asList(allowedSubContentTypes).contains(subtype);
+        }
+        return fileName != null
+                && fileName.toLowerCase(Locale.ROOT).endsWith(".jar")
+                && "text".equals(type)
+                && "plain".equals(subtype);
     }
 
 }

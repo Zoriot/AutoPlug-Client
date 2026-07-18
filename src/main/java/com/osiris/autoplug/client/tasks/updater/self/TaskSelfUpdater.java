@@ -15,6 +15,7 @@ import com.osiris.autoplug.client.configs.UpdaterConfig;
 import com.osiris.autoplug.client.managers.FileManager;
 import com.osiris.autoplug.client.tasks.updater.TaskDownload;
 import com.osiris.autoplug.client.utils.GD;
+import com.osiris.autoplug.client.utils.UtilsEnvironment;
 import com.osiris.autoplug.client.utils.UtilsJar;
 import com.osiris.betterthread.BThread;
 import com.osiris.betterthread.BThreadManager;
@@ -160,6 +161,18 @@ public class TaskSelfUpdater extends BThread {
                         finish("Downloaded AutoPlug update is broken. Nothing changed!", false);
                         return;
                     }
+                    boolean isPterodactyl = new UtilsEnvironment().isPterodactylEnvironment();
+                    if (isPterodactyl) {
+                        File currentJarFile = currentInstallationPath != null
+                                ? FileManager.convertRelativeToAbsolutePath(currentInstallationPath)
+                                : new UtilsJar().getThisJar();
+                        setStatus("Installing AutoPlug update in place (" + currentVersion + " -> " + version + ")...");
+                        Files.copy(cache_dest.toPath(), currentJarFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        setStatus("AutoPlug update was installed successfully (" + currentVersion + " -> " + version + ")!");
+                        finish(true);
+                        System.exit(0);
+                        return;
+                    }
                     setStatus("Installing AutoPlug update (" + currentVersion + " -> " + version + ")...");
                     // Create the actual update copy file, by simply copying the newly downloaded file.
                     Files.copy(cache_dest.toPath(),
@@ -180,5 +193,3 @@ public class TaskSelfUpdater extends BThread {
     }
 
 }
-
-

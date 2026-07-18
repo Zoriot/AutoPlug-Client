@@ -17,7 +17,6 @@ import com.osiris.jlib.logger.AL;
 import io.github.projectunified.mcserverupdater.UpdateBuilder;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 public class UpdaterConfig extends MyYaml {
 
@@ -35,6 +34,7 @@ public class UpdaterConfig extends MyYaml {
     public YamlSection java_updater_version;
     public YamlSection java_updater_build_id;
     public YamlSection java_updater_large_heap;
+    public YamlSection java_updater_force_enable;
 
     public YamlSection server_updater;
     public YamlSection server_updater_profile;
@@ -141,6 +141,9 @@ public class UpdaterConfig extends MyYaml {
                 "Otherwise don't touch this. It gets replaced after every successful update automatically.");
         java_updater_large_heap = put(name, "java-updater", "large-heap").setDefValues("false").setComments(
                 "Only enable if you plan to give your server more than 57gb of ram, otherwise not recommended.");
+        java_updater_force_enable = put(name, "java-updater", "force-enable").setDefValues("false").setComments(
+                "If you are running AutoPlug via Pterodactyl Panel, the java-updater is disabled to avoid redundancy. Set to true to force the self-updater to run anyways."
+        );
 
 
         put(name, "server-updater").setCountTopLineBreaks(1);
