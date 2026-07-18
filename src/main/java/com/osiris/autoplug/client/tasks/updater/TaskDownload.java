@@ -77,9 +77,7 @@ public class TaskDownload extends BThread {
             body = response.body();
             if (body == null)
                 throw new Exception("Download of '" + dest.getName() + "' failed because of null response body!");
-            if (!isAllowedContentType(fileName, body.contentType(), ignoreContentType, allowedSubContentTypes))
-                throw new Exception("Download of '" + dest.getName() + "' failed because of invalid content type: " + body.contentType());
-
+            validateContentType(dest.getName(), body.contentType(), ignoreContentType, allowedSubContentTypes);
             long completeFileSize = body.contentLength();
             setMax(completeFileSize);
 
@@ -142,20 +140,35 @@ public class TaskDownload extends BThread {
         return result;
     }
 
-    static boolean isAllowedContentType(String fileName, okhttp3.MediaType contentType, boolean ignoreContentType, String... allowedSubContentTypes) {
-        if (ignoreContentType) return true;
-        if (contentType == null) return false;
+    static void validateContentType(String fileName, okhttp3.MediaType contentType, boolean ignoreContentType, String... allowedSubContentTypes) throws Exception {
+        if (ignoreContentType) {
+            return;
+        }
+        if (contentType == null) {
+            throw new Exception("Download of '" + fileName + "' failed due to null content type!");
+        }
+
         String type = contentType.type();
         String subtype = contentType.subtype();
+
         if ("application".equals(type)) {
-            if ("java-archive".equals(subtype) || "jar".equals(subtype) || "octet-stream".equals(subtype)) return true;
-            if (allowedSubContentTypes == null) return false;
-            return Arrays.asList(allowedSubContentTypes).contains(subtype);
+            if ("java-archive".equals(subtype) || "jar".equals(subtype) || "octet-stream".equals(subtype)) {
+                return;
+            }
+            if (allowedSubContentTypes == null || !Arrays.asList(allowedSubContentTypes).contains(subtype)) {
+                throw new Exception("Download of '" + fileName + "' failed because of invalid sub-content type: " + subtype);
+            }
+            return;
         }
-        return fileName != null
+
+        if (fileName != null
                 && fileName.toLowerCase(Locale.ROOT).endsWith(".jar")
                 && "text".equals(type)
-                && "plain".equals(subtype);
+                && "plain".equals(subtype)) {
+            return;
+        }
+
+        throw new Exception("Download of '" + fileName + "' failed because of invalid content type: " + type);
     }
 
 }
