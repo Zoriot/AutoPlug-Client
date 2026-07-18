@@ -17,7 +17,6 @@ import com.osiris.jlib.logger.AL;
 import io.github.projectunified.mcserverupdater.UpdateBuilder;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 public class UpdaterConfig extends MyYaml {
 
@@ -28,7 +27,6 @@ public class UpdaterConfig extends MyYaml {
     public YamlSection self_updater;
     public YamlSection self_updater_profile;
     public YamlSection self_updater_build;
-    public YamlSection self_updater_safe_mode;
 
     public YamlSection java_updater;
     public YamlSection java_updater_profile;
@@ -127,10 +125,6 @@ public class UpdaterConfig extends MyYaml {
         self_updater_build = put(name, "self-updater", "build").setDefValues("stable").setComments(
                 "Choose between 'stable' and 'beta' builds.",
                 "Stable builds are recommended.");
-        self_updater_safe_mode = put(name, "self-updater", "safe-mode").setDefValues("true").setComments(
-                "If AutoPlug is disabled, it will update itself without advanced compatibility. Self-updating on Ptero will work in the same way as it does when not on Ptero.",
-                "Its strongly recommended to have this feature enabled on non AutoPlug specific eggs,"
-        );
 
         put(name, "java-updater").setCountTopLineBreaks(1);
         java_updater = put(name, "java-updater", "enable").setDefValues("true");
