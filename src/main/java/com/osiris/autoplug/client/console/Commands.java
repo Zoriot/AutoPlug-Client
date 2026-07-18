@@ -57,6 +57,7 @@ import com.osiris.autoplug.client.utils.UtilsMinecraft;
 import com.osiris.autoplug.client.utils.tasks.MyBThreadManager;
 import com.osiris.autoplug.client.utils.tasks.UtilsTasks;
 import com.osiris.jlib.logger.AL;
+import com.osiris.autoplug.client.tasks.updater.plugins.InstalledPluginLoader;
 
 /**
  * Listens for input started with .
@@ -427,7 +428,7 @@ public final class Commands {
             MinecraftPlugin plugin2 = new MinecraftPlugin(new File(pluginsDir + "/" + tempName).getAbsolutePath(),
                     tempName, "0", "", 0, 0, "");
             plugin2.setModrinthId(input.replace(repo, "").trim());
-            result = new ResourceFinder().findPluginByModrinthId(plugin2, mcVersion);
+            result = new ResourceFinder().findPluginByModrinthId(new InstalledPluginLoader(updaterConfig.server_software.asString()).getLoaderList(), plugin2, mcVersion);
         }
         /*
         Nothing of the above worked thus do search by name

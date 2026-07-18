@@ -302,6 +302,8 @@ public class TaskPluginsUpdater extends BThread {
         if (mcVersion == null) updaterConfig.server_updater_version.asString();
         if (mcVersion == null) mcVersion = Server.getMCVersion();
 
+        List<String> loaders = new InstalledPluginLoader(updaterConfig.server_software.asString()).getLoaderList();
+
         for (MinecraftPlugin pl :
                 includedPlugins) {
             try {
@@ -325,7 +327,7 @@ public class TaskPluginsUpdater extends BThread {
                 } else if (pl.getModrinthId() != null) { // MODRINTH PLUGIN
                     sizeModrinthPlugins++;
                     String finalMcVersion = mcVersion;
-                    activeFutures.add(executorService.submit(() -> new ResourceFinder().findPluginByModrinthId(pl, finalMcVersion)));
+                    activeFutures.add(executorService.submit(() -> new ResourceFinder().findPluginByModrinthId(loaders, pl, finalMcVersion)));
                 } else {
                     sizeUnknownPlugins++; // UNKNOWN PLUGIN
                     pl.setIgnoreContentType(true); // TODO temporary workaround for xamazon-json content type curseforge/bukkit issue: https://github.com/Osiris-Team/AutoPlug-Client/issues/109
